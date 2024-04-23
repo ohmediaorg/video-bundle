@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Form;
+namespace OHMedia\VideoBundle\Form;
 
-use App\Entity\Video;
+use OHMedia\VideoBundle\Entity\Video;
 // use Doctrine\ORM\EntityRepository;
 // use Doctrine\ORM\QueryBuilder;
 // use OHMedia\FileBundle\Form\Type\FileEntityType;

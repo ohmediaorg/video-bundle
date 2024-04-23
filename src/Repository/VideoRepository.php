@@ -1,12 +1,10 @@
 <?php
 
-namespace App\Repository;
+namespace OHMedia\VideoBundle\Repository;
 
-use App\Entity\Video;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
+use OHMedia\VideoBundle\Entity\Video;
 
 /**
  * @method Video|null find($id, $lockMode = null, $lockVersion = null)

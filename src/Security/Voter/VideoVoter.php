@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Security\Voter;
+namespace OHMedia\VideoBundle\Security\Voter;
 
-use App\Entity\Video;
 use OHMedia\SecurityBundle\Entity\User;
 use OHMedia\SecurityBundle\Security\Voter\AbstractEntityVoter;
+use OHMedia\VideoBundle\Entity\Video;
 
 class VideoVoter extends AbstractEntityVoter
 {

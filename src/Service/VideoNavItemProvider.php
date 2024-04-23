@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Service\Backend\Nav;
+namespace OHMedia\VideoBundle\Service\Backend\Nav;
 
-use App\Entity\Video;
-use App\Security\Voter\VideoVoter;
 use OHMedia\BackendBundle\Service\AbstractNavItemProvider;
 use OHMedia\BootstrapBundle\Component\Nav\NavItemInterface;
 use OHMedia\BootstrapBundle\Component\Nav\NavLink;
+use OHMedia\VideoBundle\Entity\Video;
+use OHMedia\VideoBundle\Security\Voter\VideoVoter;
 
 class VideoNavItemProvider extends AbstractNavItemProvider
 {

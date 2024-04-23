@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Entity;
+namespace OHMedia\VideoBundle\Entity;
 
-use App\Repository\VideoRepository;
 use Doctrine\ORM\Mapping as ORM;
 use OHMedia\SecurityBundle\Entity\Traits\BlameableTrait;
+use OHMedia\VideoBundle\Repository\VideoRepository;
 
 #[ORM\Entity(repositoryClass: VideoRepository::class)]
 class Video

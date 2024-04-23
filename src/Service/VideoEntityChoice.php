@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Service\EntityChoice;
+namespace OHMedia\VideoBundle\Service\EntityChoice;
 
-use App\Entity\Video;
 use OHMedia\SecurityBundle\Service\EntityChoiceInterface;
+use OHMedia\VideoBundle\Entity\Video;
 
 class VideoEntityChoice implements EntityChoiceInterface
 {

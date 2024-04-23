@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Controller\Backend;
+namespace OHMedia\VideoBundle\Controller\Backend;
 
-use App\Entity\Video;
-use App\Form\VideoType;
-use App\Repository\VideoRepository;
-use App\Security\Voter\VideoVoter;
 use OHMedia\BackendBundle\Routing\Attribute\Admin;
 use OHMedia\BootstrapBundle\Service\Paginator;
 use OHMedia\SecurityBundle\Form\DeleteType;
+use OHMedia\VideoBundle\Entity\Video;
+use OHMedia\VideoBundle\Form\VideoType;
+use OHMedia\VideoBundle\Repository\VideoRepository;
+use OHMedia\VideoBundle\Security\Voter\VideoVoter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
