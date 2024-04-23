@@ -1,6 +1,6 @@
 <?php
 
-namespace OHMedia\VideoBundle\Controller\Backend;
+namespace OHMedia\VideoBundle\Controller;
 
 use OHMedia\BackendBundle\Routing\Attribute\Admin;
 use OHMedia\BootstrapBundle\Service\Paginator;

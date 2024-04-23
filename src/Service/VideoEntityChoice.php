@@ -1,6 +1,6 @@
 <?php
 
-namespace OHMedia\VideoBundle\Service\EntityChoice;
+namespace OHMedia\VideoBundle\Service;
 
 use OHMedia\SecurityBundle\Service\EntityChoiceInterface;
 use OHMedia\VideoBundle\Entity\Video;
