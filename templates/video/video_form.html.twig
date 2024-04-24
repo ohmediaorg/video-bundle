@@ -10,18 +10,39 @@
     {{ form_start(form) }}
     <div class="row">
       <div class="col-lg-6">
-        {{ form_row(form.url) }}
+        <div class="mb-3">
+          {{ form_label(form.url) }}
+          <div class="input-group">
+            {{ form_widget(form.url) }}
+            <button id="{{ form.url.vars.id }}_button" class="btn btn-dark" type="button" title="Get Video Data">
+              <i class="bi bi-cloud-arrow-down-fill"></i>
+              <span class="visually-hidden">Get Video Data</span>
+            </button>
+          </div>
+          {{ form_help(form.url) }}
+          {{ form_errors(form.url) }}
+        </div>
         {{ form_row(form.title) }}
 
         <div class="mb-3">
-          <label class="form-label">Type</label>
-          <div id="video_type" class="form-control" style="background-color: var(--bs-secondary-bg);">&nbsp;</div>
+          <label class="form-label required">Type</label>
+          <div id="video_type_disabled" class="form-control" style="background-color:var(--bs-secondary-bg)">&nbsp;</div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label required">Video ID</label>
+          <input id="video_id_disabled" class="form-control" disabled />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label required">Duration</label>
+          <input id="video_duration_disabled" class="form-control" disabled />
         </div>
       </div>
       <div class="col-lg-6">
         <div class="mb-3">
           <label class="form-label">Thumbnail</label>
-          <div id="video_thumbnail" class="form-control" style="background-color: var(--bs-secondary-bg);">TBD</div>
+          <div id="video_thumbnail_display">&nbsp;</div>
         </div>
 
         {{ form_row(form.image) }}
@@ -37,41 +58,52 @@
   import parse from '/bundles/ohmediavideo/js/video.js';
 
   const urlInput = document.getElementById('{{ form.url.vars.id }}');
+  const urlLabel = document.querySelector('label[for=' + urlInput.id + ']');
+  const urlButton = document.getElementById('{{ form.url.vars.id }}_button');
   const titleInput = document.getElementById('{{ form.title.vars.id }}');
   const typeInput = document.getElementById('{{ form.type.vars.id }}');
   const videoIdInput = document.getElementById('{{ form.video_id.vars.id }}');
   const thumbnailInput = document.getElementById('{{ form.thumbnail.vars.id }}');
   const durationInput = document.getElementById('{{ form.duration.vars.id }}');
 
-  const typeContainer = document.getElementById('video_type');
-  const thumbnailContainer = document.getElementById('video_thumbnail');
+  const typeDisabled = document.getElementById('video_type_disabled');
+  const videoIdDisabled = document.getElementById('video_id_disabled');
+  const durationDisabled = document.getElementById('video_duration_disabled');
 
-  urlInput.addEventListener('change', async () => {
+  const thumbnailContainer = document.getElementById('video_thumbnail_display');
+
+  urlButton.addEventListener('click', async (e) => {
+    e.preventDefault();
+
+    urlButton.disabled = true;
     urlInput.disabled = true;
     titleInput.disabled = true;
 
     const video = await parse(urlInput.value);
 
+    urlButton.disabled = false;
     urlInput.disabled = false;
     titleInput.disabled = false;
 
     if (video) {
       titleInput.value = video.title;
       typeInput.value = video.type;
-      videoIdInput.value = video.video_id;
+      videoIdInput.value = video.id;
       thumbnailInput.value = video.thumbnail;
       durationInput.value = video.duration;
 
       if ('youtube' === video.type) {
-        typeContainer.innerHTML = 'YouTube <i class="bi bi-youtube" style="color:#ff0000"></i>';
+        typeDisabled.innerHTML = 'YouTube <i class="bi bi-youtube" style="color:red"></i>';
       } else if ('vimeo' === video.type) {
-        typeContainer.innerHTML = 'Vimeo <i class="bi bi-vimeo" style="color:#19b7ea"></i>';
+        typeDisabled.innerHTML = 'Vimeo <i class="bi bi-vimeo" style="color:#00adef"></i>';
       } else {
-        typeContainer.innerHTML = 'Unsupported type.';
+        typeDisabled.innerHTML = 'Unsupported Type <i class="bi bi-exclamation-triangle-fill" style="color:var(--bs-warning)"></i>';
       }
 
+      videoIdDisabled.value = video.id;
+      durationDisabled.value = video.duration_formatted;
+
       thumbnailContainer.innerHTML = '';
-      thumbnailContainer.classList.remove('form-control');
 
       if (video.thumbnail) {
         const thumbnail = document.createElement('img');
@@ -80,11 +112,8 @@
         thumbnailContainer.appendChild(thumbnail);
       } else {
         thumbnailContainer.innerHTML = 'Not found.';
-        thumbnailContainer.classList.add('form-control');
       }
     }
-
-    console.log(video);
   });
 </script>
 {% endblock %}

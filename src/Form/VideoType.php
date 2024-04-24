@@ -17,8 +17,9 @@ class VideoType extends AbstractType
         $video = $options['data'];
 
         $builder->add('url', UrlType::class, [
-            'label' => 'YouTube/Vimeo URL',
+            'label' => 'URL',
             'mapped' => false,
+            'help' => 'Enter a YouTube or Vimeo URL.',
         ]);
 
         $builder->add('title');
