@@ -26,17 +26,17 @@
 
         <div class="mb-3">
           <label class="form-label required">Type</label>
-          <div id="video_type_disabled" class="form-control" style="background-color:var(--bs-secondary-bg)">&nbsp;</div>
+          <div id="video_type_display" class="form-control" style="background-color:var(--bs-secondary-bg)">&nbsp;</div>
         </div>
 
         <div class="mb-3">
           <label class="form-label required">Video ID</label>
-          <input id="video_id_disabled" class="form-control" disabled />
+          <input id="video_id_display" class="form-control" value="{{ video.videoId }}" disabled />
         </div>
 
         <div class="mb-3">
           <label class="form-label required">Duration</label>
-          <input id="video_duration_disabled" class="form-control" disabled />
+          <input id="video_duration_display" class="form-control" value="{{ video.durationFormatted }}" disabled />
         </div>
       </div>
       <div class="col-lg-6">
@@ -60,17 +60,48 @@
   const urlInput = document.getElementById('{{ form.url.vars.id }}');
   const urlLabel = document.querySelector('label[for=' + urlInput.id + ']');
   const urlButton = document.getElementById('{{ form.url.vars.id }}_button');
+
   const titleInput = document.getElementById('{{ form.title.vars.id }}');
   const typeInput = document.getElementById('{{ form.type.vars.id }}');
   const videoIdInput = document.getElementById('{{ form.video_id.vars.id }}');
   const thumbnailInput = document.getElementById('{{ form.thumbnail.vars.id }}');
   const durationInput = document.getElementById('{{ form.duration.vars.id }}');
 
-  const typeDisabled = document.getElementById('video_type_disabled');
-  const videoIdDisabled = document.getElementById('video_id_disabled');
-  const durationDisabled = document.getElementById('video_duration_disabled');
+  const typeDisplay = document.getElementById('video_type_display');
+  const videoIdDisplay = document.getElementById('video_id_display');
+  const durationDisplay = document.getElementById('video_duration_display');
+  const thumbnailDisplay = document.getElementById('video_thumbnail_display');
 
-  const thumbnailContainer = document.getElementById('video_thumbnail_display');
+  function setTypeDisplay(type) {
+    if ('youtube' === type) {
+      typeDisplay.innerHTML = 'YouTube <i class="bi bi-youtube" style="color:red"></i>';
+    } else if ('vimeo' === type) {
+      typeDisplay.innerHTML = 'Vimeo <i class="bi bi-vimeo" style="color:#00adef"></i>';
+    } else {
+      typeDisplay.innerHTML = 'Unsupported Type <i class="bi bi-exclamation-triangle-fill" style="color:var(--bs-warning)"></i>';
+    }
+  }
+
+  {% if video.type %}
+  setTypeDisplay({{ video.type|json_encode|raw }});
+  {% endif %}
+
+  function setThumbnailDisplay(thumbnail) {
+    thumbnailDisplay.innerHTML = '';
+
+    if (thumbnail) {
+      const img = document.createElement('img');
+      img.src = thumbnail;
+
+      thumbnailDisplay.appendChild(img);
+    } else {
+      thumbnailDisplay.innerHTML = 'Not found.';
+    }
+  }
+
+  {% if video.thumbnail %}
+  setThumbnailDisplay({{ video.thumbnail|json_encode|raw }});
+  {% endif %}
 
   urlButton.addEventListener('click', async (e) => {
     e.preventDefault();
@@ -92,27 +123,12 @@
       thumbnailInput.value = video.thumbnail;
       durationInput.value = video.duration;
 
-      if ('youtube' === video.type) {
-        typeDisabled.innerHTML = 'YouTube <i class="bi bi-youtube" style="color:red"></i>';
-      } else if ('vimeo' === video.type) {
-        typeDisabled.innerHTML = 'Vimeo <i class="bi bi-vimeo" style="color:#00adef"></i>';
-      } else {
-        typeDisabled.innerHTML = 'Unsupported Type <i class="bi bi-exclamation-triangle-fill" style="color:var(--bs-warning)"></i>';
-      }
+      setTypeDisplay(video.type);
 
-      videoIdDisabled.value = video.id;
-      durationDisabled.value = video.duration_formatted;
+      videoIdDisplay.value = video.id;
+      durationDisplay.value = video.duration_formatted;
 
-      thumbnailContainer.innerHTML = '';
-
-      if (video.thumbnail) {
-        const thumbnail = document.createElement('img');
-        thumbnail.src = video.thumbnail;
-
-        thumbnailContainer.appendChild(thumbnail);
-      } else {
-        thumbnailContainer.innerHTML = 'Not found.';
-      }
+      setThumbnailDisplay(video.thumbnail);
     }
   });
 </script>
