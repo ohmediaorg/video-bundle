@@ -120,4 +120,34 @@ class Video
 
         return $this;
     }
+
+    public function getDurationFormatted(): string
+    {
+        $duration = $this->duration;
+
+        $hours = floor($duration / 3600);
+
+        // remainder of minutes in seconds
+        $duration = $duration % 3600;
+
+        $minutes = floor($duration / 60);
+
+        if ($hours && $minutes < 10) {
+            $minutes = '0'.$minutes;
+        }
+
+        $seconds = $duration % 60;
+
+        if ($seconds < 10) {
+            $seconds = '0'.$seconds;
+        }
+
+        $parts = [$minutes, $seconds];
+
+        if ($hours) {
+            array_unshift($parts, $hours);
+        }
+
+        return implode(':', $parts);
+    }
 }
