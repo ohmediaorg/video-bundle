@@ -13,6 +13,9 @@ class Video
 {
     use BlameableTrait;
 
+    public const TYPE_VIMEO = 'vimeo';
+    public const TYPE_YOUTUBE = 'youtube';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
