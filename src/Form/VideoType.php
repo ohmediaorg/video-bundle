@@ -16,11 +16,12 @@ class VideoType extends AbstractType
     {
         $video = $options['data'];
 
-        $builder->add('title');
-
         $builder->add('url', UrlType::class, [
+            'label' => 'YouTube/Vimeo URL',
             'mapped' => false,
         ]);
+
+        $builder->add('title');
 
         $builder->add('type', HiddenType::class);
         $builder->add('video_id', HiddenType::class);
@@ -29,6 +30,7 @@ class VideoType extends AbstractType
 
         $builder->add('image', FileEntityType::class, [
             'label' => 'Override Thumbnail',
+            'required' => false,
             'image' => true,
             'data' => $video->getImage(),
         ]);
