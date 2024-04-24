@@ -15,6 +15,10 @@ const youTubeRegex =
 const vimeoRegex =
   /(http|https)?:\/\/(www|player\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|video\/|)(\d+)(?:|\/\?)/;
 
+const nullPromise = new Promise((resolve) => {
+  resolve(null);
+});
+
 function formatDuration(duration) {
   const minutes = Math.floor(duration / 60);
   let seconds = duration % 60;
@@ -30,10 +34,10 @@ function parseYouTube(url) {
   const matches = url.match(youTubeRegex);
 
   if (!matches) {
-    return new Promise(() => null);
+    return nullPromise;
   }
 
-  const id = yt[1];
+  const id = matches[1];
 
   const video = {
     type: 'youtube',
@@ -57,6 +61,8 @@ function parseYouTube(url) {
     function checkThumb(i) {
       if (i >= thumbs.length) {
         resolve();
+
+        return;
       }
 
       const image = new Image();
@@ -70,6 +76,8 @@ function parseYouTube(url) {
           checkThumb(i + 1);
         } else {
           resolve();
+
+          return;
         }
       };
 
@@ -124,10 +132,10 @@ function parseVimeo(url) {
   const matches = url.match(vimeoRegex);
 
   if (!matches) {
-    return new Promise(() => null);
+    return nullPromise;
   }
 
-  const id = vi[4];
+  const id = matches[4];
 
   const video = {
     type: 'vimeo',
@@ -139,16 +147,20 @@ function parseVimeo(url) {
     duration_formatted: null,
   };
 
-  return fetch('//vimeo.com/api/v2/video/' + id + '.json')
-    .then((data) => {
-      video.thumb = data[0].thumbnail_large;
-      video.duration = data[0].duration;
-      video.duration_formatted = formatDuration(video.duration);
-    })
-    .catch()
-    .finally(() => {
-      return video;
-    });
+  return new Promise((resolve) => {
+    fetch('//vimeo.com/api/v2/video/' + id + '.json')
+      .then((r) => r.json())
+      .then((data) => {
+        console.log(data);
+        video.thumb = data[0].thumbnail_large;
+        video.duration = data[0].duration;
+        video.duration_formatted = formatDuration(video.duration);
+      })
+      .catch()
+      .finally(() => {
+        resolve(video);
+      });
+  });
 }
 
 export default function (url) {
@@ -157,6 +169,6 @@ export default function (url) {
   } else if (-1 !== url.indexOf('vimeo')) {
     return parseVimeo(url);
   } else {
-    return new Promise(() => null);
+    return nullPromise;
   }
 }
