@@ -34,7 +34,7 @@ class VideoController extends AbstractController
         $qb = $videoRepository->createQueryBuilder('v');
         $qb->orderBy('v.id', 'desc');
 
-        return $this->render('@backend/video/video_index.html.twig', [
+        return $this->render('@OHMediaVideo/video/video_index.html.twig', [
             'pagination' => $paginator->paginate($qb, 20),
             'new_video' => $newVideo,
             'attributes' => $this->getAttributes(),
@@ -68,7 +68,7 @@ class VideoController extends AbstractController
             return $this->redirectToRoute('video_index');
         }
 
-        return $this->render('@backend/video/video_create.html.twig', [
+        return $this->render('@OHMediaVideo/video/video_create.html.twig', [
             'form' => $form->createView(),
             'video' => $video,
         ]);
@@ -100,7 +100,7 @@ class VideoController extends AbstractController
             return $this->redirectToRoute('video_index');
         }
 
-        return $this->render('@backend/video/video_edit.html.twig', [
+        return $this->render('@OHMediaVideo/video/video_edit.html.twig', [
             'form' => $form->createView(),
             'video' => $video,
         ]);
@@ -132,7 +132,7 @@ class VideoController extends AbstractController
             return $this->redirectToRoute('video_index');
         }
 
-        return $this->render('@backend/video/video_delete.html.twig', [
+        return $this->render('@OHMediaVideo/video/video_delete.html.twig', [
             'form' => $form->createView(),
             'video' => $video,
         ]);
