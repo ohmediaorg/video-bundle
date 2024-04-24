@@ -60,6 +60,11 @@
               <small class="d-block">{{ video.title }}</small>
               {% if video.url %}
               <small class="d-block">
+                {% if video.typeVimeo %}
+                <i class="bi bi-vimeo" style="color:#00adef"></i>
+                {% elseif video.typeYouTube %}
+                <i class="bi bi-youtube" style="color:red"></i>
+                {% endif %}
                 <a href="{{ video.url }}" target="_blank" rel="noopener">{{ video.url }}</a>
               </small>
               {% endif %}
