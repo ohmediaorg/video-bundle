@@ -76,6 +76,6 @@ class WysiwygExtension extends AbstractWysiwygExtension
             'embedUrl' => $video->getEmbedUrl(),
         ];
 
-        $rendered .= '<script type="application/ld+json">'.json_encode($schema).'</script>';
+        return '<script type="application/ld+json">'.json_encode($schema).'</script>';
     }
 }
