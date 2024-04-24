@@ -5,6 +5,7 @@ namespace OHMedia\VideoBundle\Security\Voter;
 use OHMedia\SecurityBundle\Entity\User;
 use OHMedia\SecurityBundle\Security\Voter\AbstractEntityVoter;
 use OHMedia\VideoBundle\Entity\Video;
+use OHMedia\WysiwygBundle\Service\Wysiwyg;
 
 class VideoVoter extends AbstractEntityVoter
 {
@@ -12,6 +13,10 @@ class VideoVoter extends AbstractEntityVoter
     public const CREATE = 'create';
     public const EDIT = 'edit';
     public const DELETE = 'delete';
+
+    public function __construct(private Wysiwyg $wysiwyg)
+    {
+    }
 
     protected function getAttributes(): array
     {
@@ -45,6 +50,8 @@ class VideoVoter extends AbstractEntityVoter
 
     protected function canDelete(Video $video, User $loggedIn): bool
     {
-        return true;
+        $shortcode = sprintf('{{ video(%d) }}', $video->getId());
+
+        return !$this->wysiwyg->shortcodesInUse($shortcode);
     }
 }
