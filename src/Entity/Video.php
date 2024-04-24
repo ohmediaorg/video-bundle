@@ -131,22 +131,51 @@ class Video
         return $this;
     }
 
-    public function getDurationFormatted(): string
+    public function getHours(): int
     {
-        $duration = $this->duration;
+        return floor($this->duration / 3600);
+    }
 
-        $hours = floor($duration / 3600);
+    public function getMinutes(): int
+    {
+        return floor(($this->duration % 3600) / 60);
+    }
 
-        // remainder of minutes in seconds
-        $duration = $duration % 3600;
+    public function getSeconds(): int
+    {
+        return $this->duration % 60;
+    }
 
-        $minutes = floor($duration / 60);
+    public function getDurationISO8601(): string
+    {
+        $hours = $this->getHours();
+        $minutes = $this->getMinutes();
+        $seconds = $this->getSeconds();
+
+        $duration = 'PT';
+
+        if ($hours) {
+            $duration .= $hours.'H';
+        }
+
+        if ($minutes) {
+            $duration .= $minutes.'M';
+        }
+
+        $duration .= $seconds.'S';
+
+        return $duration;
+    }
+
+    public function getDurationReadable(): string
+    {
+        $hours = $this->getHours();
+        $minutes = $this->getMinutes();
+        $seconds = $this->getSeconds();
 
         if ($hours && $minutes < 10) {
             $minutes = '0'.$minutes;
         }
-
-        $seconds = $duration % 60;
 
         if ($seconds < 10) {
             $seconds = '0'.$seconds;
