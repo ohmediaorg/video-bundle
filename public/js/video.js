@@ -44,7 +44,8 @@ function parseYouTube(url) {
     id: id,
     embed: 'https://www.youtube.com/embed/' + id,
     url: 'https://www.youtube.com/watch?v=' + id,
-    thumb: null,
+    title: null,
+    thumbnail: null,
     duration: null,
     duration_formatted: null,
   };
@@ -68,7 +69,7 @@ function parseYouTube(url) {
       const image = new Image();
 
       image.onload = function (e) {
-        video.thumb = image.src;
+        video.thumbnail = image.src;
 
         if (image.width <= 120 || image.height <= 90) {
           // it's the thumbnail missing image
@@ -113,6 +114,7 @@ function parseYouTube(url) {
         },
         events: {
           onReady: function () {
+            video.title = player.getVideoData().title;
             video.duration = player.getDuration();
             video.duration_formatted = formatDuration(video.duration);
 
@@ -142,7 +144,8 @@ function parseVimeo(url) {
     id: id,
     embed: 'https://player.vimeo.com/video/' + id,
     url: 'https://vimeo.com/' + id,
-    thumb: null,
+    title: null,
+    thumbnail: null,
     duration: null,
     duration_formatted: null,
   };
@@ -151,8 +154,8 @@ function parseVimeo(url) {
     fetch('//vimeo.com/api/v2/video/' + id + '.json')
       .then((r) => r.json())
       .then((data) => {
-        console.log(data);
-        video.thumb = data[0].thumbnail_large;
+        video.title = data[0].title;
+        video.thumbnail = data[0].thumbnail_large;
         video.duration = data[0].duration;
         video.duration_formatted = formatDuration(video.duration);
       })
