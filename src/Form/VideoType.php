@@ -20,6 +20,7 @@ class VideoType extends AbstractType
             'label' => 'URL',
             'mapped' => false,
             'help' => 'Enter a YouTube or Vimeo URL.',
+            'data' => $video->getUrl(),
         ]);
 
         $builder->add('title');

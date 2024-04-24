@@ -32,7 +32,7 @@ class VideoController extends AbstractController
         );
 
         $qb = $videoRepository->createQueryBuilder('v');
-        $qb->orderBy('v.id', 'desc');
+        $qb->orderBy('v.title', 'asc');
 
         return $this->render('@OHMediaVideo/video/video_index.html.twig', [
             'pagination' => $paginator->paginate($qb, 20),

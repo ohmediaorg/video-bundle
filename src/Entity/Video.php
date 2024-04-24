@@ -73,6 +73,16 @@ class Video
         return $this;
     }
 
+    public function isTypeVimeo()
+    {
+        return self::TYPE_VIMEO === $this->type;
+    }
+
+    public function isTypeYouTube()
+    {
+        return self::TYPE_YOUTUBE === $this->type;
+    }
+
     public function getVideoId(): ?string
     {
         return $this->video_id;
@@ -149,5 +159,27 @@ class Video
         }
 
         return implode(':', $parts);
+    }
+
+    public function getUrl(): string
+    {
+        if ($this->isTypeVimeo()) {
+            return 'https://vimeo.com/'.$this->video_id;
+        } elseif ($this->isTypeYouTube()) {
+            return 'https://www.youtube.com/watch?v='.$this->video_id;
+        }
+
+        return '';
+    }
+
+    public function getEmbedUrl(): string
+    {
+        if ($this->isTypeVimeo()) {
+            return 'https://player.vimeo.com/video/'.$this->video_id;
+        } elseif ($this->isTypeYouTube()) {
+            return 'https://www.youtube.com/embed/'.$this->video_id;
+        }
+
+        return '';
     }
 }

@@ -37,14 +37,37 @@
       <table class="table table-striped">
         <thead>
           <tr>
-            <th>Video</th>
+            <th>&nbsp;</th>
+            <th>Info</th>
             <th></th>
           </tr>
         </thead>
         <tbody>
           {% for video in pagination.results %}
           <tr>
-            <td>{{ video }}</td>
+            <td style="width:150px;">
+              {% if video.image and video.image.path %}
+                {{ image_tag(video.image, {
+                  width: 150,
+                  height: 100,
+                }) }}
+              {% elseif video.thumbnail %}
+                <img src="{{ video.thumbnail }}" />
+              {% endif %}
+            </td>
+            <td>
+              {{ video.title }}
+              {% if video.url %}
+              <small class="d-block">
+                <a href="{{ video.url }}" target="_blank" rel="noopener">{{ video.url }}</a>
+              </small>
+              {% endif %}
+              {% if video.duration %}
+              <small class="d-block">
+                <b>Duration:</b> {{ video.durationFormatted }}
+              </small>
+              {% endif %}
+            </td>
             <td>
               {% if is_granted(attributes.edit, video) %}
               <a class="btn btn-sm btn-primary btn-action" href="{{ path('video_edit', {id: video.id}) }}" title="Edit">
