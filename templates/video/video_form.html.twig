@@ -1,9 +1,84 @@
 {% extends '@OHMediaBackend/form.html.twig' %}
 
+{% block meta_title %}{{ form_title }}{% endblock %}
+
+{% block main %}
+<div class="card">
+  <div class="card-body">
+    <h1 class="card-title h3">{{ form_title }}</h1>
+
+    {{ form_start(form) }}
+    <div class="row">
+      <div class="col-lg-6">
+        {{ form_row(form.url) }}
+        {{ form_row(form.title) }}
+
+        <div class="mb-3">
+          <label class="form-label">Type</label>
+          <div id="video_type" class="form-control">&nbsp;</div>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="mb-3">
+          <label class="form-label">Thumbnail</label>
+          <div id="video_thumbnail">&nbsp;</div>
+        </div>
+
+        {{ form_row(form.image) }}
+      </div>
+    </div>
+    {{ form_end(form) }}
+  </div>
+</div>
+{% endblock %}
+
 {% block javascripts %}
 <script type="module">
   import parse from '/bundles/ohmediavideo/js/video.js';
 
-  // TODO: apply events to video URL field
+  const urlInput = document.getElementById('{{ form.url.vars.id }}');
+  const titleInput = document.getElementById('{{ form.title.vars.id }}');
+  const typeInput = document.getElementById('{{ form.type.vars.id }}');
+  const videoIdInput = document.getElementById('{{ form.video_id.vars.id }}');
+  const thumbnailInput = document.getElementById('{{ form.thumbnail.vars.id }}');
+  const durationInput = document.getElementById('{{ form.duration.vars.id }}');
+
+  const typeContainer = document.getElementById('video_type');
+  const thumbnailContainer = document.getElementById('video_thumbnail');
+
+  urlInput.addEventListener('change', async () => {
+    const video = await parse(urlInput.value);
+
+    if (video) {
+      titleInput.value = video.title;
+      typeInput.value = video.type;
+      videoIdInput.value = video.video_id;
+      thumbnailInput.value = video.thumbnail;
+      durationInput.value = video.duration;
+
+      if ('youtube' === video.type) {
+        typeContainer.innerHTML = 'YouTube <i class="bi bi-youtube" style="color:#ff0000"></i>';
+      } else if ('vimeo' === video.type) {
+        typeContainer.innerHTML = 'Vimeo <i class="bi bi-vimeo" style="color:#19b7ea"></i>';
+      } else {
+        typeContainer.innerHTML = 'Unsupported type.';
+      }
+
+      thumbnailContainer.innerHTML = '';
+      thumbnailContainer.classList.remove('form-control');
+
+      if (video.thumbnail) {
+        const thumbnail = document.createElement('img');
+        thumbnail.src = video.thumbnail;
+
+        thumbnailContainer.appendChild(thumbnail);
+      } else {
+        thumbnailContainer.innerHTML = 'Not found.';
+        thumbnailContainer.classList.add('form-control');
+      }
+    }
+
+    console.log(video);
+  });
 </script>
 {% endblock %}
