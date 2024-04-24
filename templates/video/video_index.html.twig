@@ -38,7 +38,8 @@
         <thead>
           <tr>
             <th>&nbsp;</th>
-            <th>Info</th>
+            <th>Video</th>
+            <th>Shortcode</th>
             <th></th>
           </tr>
         </thead>
@@ -56,7 +57,7 @@
               {% endif %}
             </td>
             <td>
-              {{ video.title }}
+              <small class="d-block">{{ video.title }}</small>
               {% if video.url %}
               <small class="d-block">
                 <a href="{{ video.url }}" target="_blank" rel="noopener">{{ video.url }}</a>
@@ -68,6 +69,7 @@
               </small>
               {% endif %}
             </td>
+            <td style="width:150px"><code>{{ '{{ video(' ~ video.id ~ ') }}' }}</code></td>
             <td>
               {% if is_granted(attributes.edit, video) %}
               <a class="btn btn-sm btn-primary btn-action" href="{{ path('video_edit', {id: video.id}) }}" title="Edit">
