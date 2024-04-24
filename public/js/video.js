@@ -20,14 +20,30 @@ const nullPromise = new Promise((resolve) => {
 });
 
 function formatDuration(duration) {
-  const minutes = Math.floor(duration / 60);
+  let hours = Math.floor(duration / 3600);
+
+  // remainder of minutes in seconds
+  duration = duration % 3600;
+
+  let minutes = Math.floor(duration / 60);
+
+  if (hours && minutes < 10) {
+    minutes = '0' + minutes;
+  }
+
   let seconds = duration % 60;
 
   if (seconds < 10) {
     seconds = '0' + seconds;
   }
 
-  return minutes + ':' + seconds;
+  let parts = [minutes, seconds];
+
+  if (hours) {
+    parts.unshift(hours);
+  }
+
+  return parts.join(':');
 }
 
 function parseYouTube(url) {
