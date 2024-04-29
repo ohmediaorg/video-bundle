@@ -6,6 +6,5 @@ services:
     OHMedia\VideoBundle\:
         resource: '../src/'
         exclude:
-            - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/OHMediaVideoBundle.php'
