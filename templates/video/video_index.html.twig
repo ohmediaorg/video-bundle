@@ -40,6 +40,7 @@
             <th>&nbsp;</th>
             <th>Video</th>
             <th>Shortcode</th>
+            <th>Last Updated</th>
             <th></th>
           </tr>
         </thead>
@@ -75,6 +76,7 @@
               {% endif %}
             </td>
             <td style="width:150px"><code>{{ '{{ video(' ~ video.id ~ ') }}' }}</code></td>
+            <td>{{ video.updatedAt|datetime }}</td>
             <td>
               {% if is_granted(attributes.edit, video) %}
               <a class="btn btn-sm btn-primary btn-action" href="{{ path('video_edit', {id: video.id}) }}" title="Edit">
