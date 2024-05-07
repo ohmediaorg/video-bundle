@@ -33,7 +33,7 @@ class WysiwygExtension extends AbstractWysiwygExtension
 
     public function video(Environment $twig, int $id = null)
     {
-        $video = $this->videoRepository->find($id);
+        $video = $id ? $this->videoRepository->find($id) : null;
 
         if (!$video) {
             return '';
