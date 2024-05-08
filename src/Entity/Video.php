@@ -41,7 +41,7 @@ class Video
 
     public function __toString(): string
     {
-        return 'Video #'.$this->id;
+        return $this->title;
     }
 
     public function getId(): ?int
