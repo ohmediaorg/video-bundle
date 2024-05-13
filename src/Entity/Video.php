@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use OHMedia\FileBundle\Entity\File;
 use OHMedia\SecurityBundle\Entity\Traits\BlameableTrait;
 use OHMedia\VideoBundle\Repository\VideoRepository;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: VideoRepository::class)]
 class Video
@@ -22,21 +23,27 @@ class Video
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 255)]
     private ?string $title = null;
 
     #[ORM\Column(length: 20)]
+    #[Assert\Length(max: 20)]
     private ?string $type = null;
 
     #[ORM\Column(length: 20)]
+    #[Assert\Length(max: 20)]
     private ?string $video_id = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Length(max: 255)]
     private ?string $thumbnail = null;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     private ?File $image = null;
 
     #[ORM\Column(type: Types::SMALLINT, nullable: true, options: ['unsigned' => true])]
+    #[Assert\Range(min: 0, max: 65535)]
     private ?int $duration = null;
 
     public function __toString(): string
