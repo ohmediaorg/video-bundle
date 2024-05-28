@@ -18,11 +18,13 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Admin]
 class VideoController extends AbstractController
 {
+    public function __construct(private VideoRepository $videoRepository)
+    {
+    }
+
     #[Route('/videos', name: 'video_index', methods: ['GET'])]
-    public function index(
-        VideoRepository $videoRepository,
-        Paginator $paginator
-    ): Response {
+    public function index(Paginator $paginator): Response
+    {
         $newVideo = new Video();
 
         $this->denyAccessUnlessGranted(
@@ -31,7 +33,7 @@ class VideoController extends AbstractController
             'You cannot access the list of videos.'
         );
 
-        $qb = $videoRepository->createQueryBuilder('v');
+        $qb = $this->videoRepository->createQueryBuilder('v');
         $qb->orderBy('v.title', 'asc');
 
         return $this->render('@OHMediaVideo/video/video_index.html.twig', [
@@ -42,10 +44,8 @@ class VideoController extends AbstractController
     }
 
     #[Route('/video/create', name: 'video_create', methods: ['GET', 'POST'])]
-    public function create(
-        Request $request,
-        VideoRepository $videoRepository
-    ): Response {
+    public function create(Request $request): Response
+    {
         $video = new Video();
 
         $this->denyAccessUnlessGranted(
@@ -61,7 +61,7 @@ class VideoController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $videoRepository->save($video, true);
+            $this->videoRepository->save($video, true);
 
             $this->addFlash('notice', 'The video was created successfully.');
 
@@ -78,7 +78,6 @@ class VideoController extends AbstractController
     public function edit(
         Request $request,
         Video $video,
-        VideoRepository $videoRepository
     ): Response {
         $this->denyAccessUnlessGranted(
             VideoVoter::EDIT,
@@ -93,7 +92,7 @@ class VideoController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $videoRepository->save($video, true);
+            $this->videoRepository->save($video, true);
 
             $this->addFlash('notice', 'The video was updated successfully.');
 
@@ -110,7 +109,6 @@ class VideoController extends AbstractController
     public function delete(
         Request $request,
         Video $video,
-        VideoRepository $videoRepository
     ): Response {
         $this->denyAccessUnlessGranted(
             VideoVoter::DELETE,
@@ -125,7 +123,7 @@ class VideoController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $videoRepository->remove($video, true);
+            $this->videoRepository->remove($video, true);
 
             $this->addFlash('notice', 'The video was deleted successfully.');
 
