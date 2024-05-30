@@ -60,12 +60,16 @@ class VideoController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->videoRepository->save($video, true);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $this->videoRepository->save($video, true);
 
-            $this->addFlash('notice', 'The video was created successfully.');
+                $this->addFlash('notice', 'The video was created successfully.');
 
-            return $this->redirectToRoute('video_index');
+                return $this->redirectToRoute('video_index');
+            }
+
+            $this->addFlash('error', 'There are some errors in the form below.');
         }
 
         return $this->render('@OHMediaVideo/video/video_create.html.twig', [
@@ -91,12 +95,16 @@ class VideoController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->videoRepository->save($video, true);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $this->videoRepository->save($video, true);
 
-            $this->addFlash('notice', 'The video was updated successfully.');
+                $this->addFlash('notice', 'The video was updated successfully.');
 
-            return $this->redirectToRoute('video_index');
+                return $this->redirectToRoute('video_index');
+            }
+
+            $this->addFlash('error', 'There are some errors in the form below.');
         }
 
         return $this->render('@OHMediaVideo/video/video_edit.html.twig', [
@@ -122,12 +130,16 @@ class VideoController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->videoRepository->remove($video, true);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $this->videoRepository->remove($video, true);
 
-            $this->addFlash('notice', 'The video was deleted successfully.');
+                $this->addFlash('notice', 'The video was deleted successfully.');
 
-            return $this->redirectToRoute('video_index');
+                return $this->redirectToRoute('video_index');
+            }
+
+            $this->addFlash('error', 'There are some errors in the form below.');
         }
 
         return $this->render('@OHMediaVideo/video/video_delete.html.twig', [
