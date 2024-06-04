@@ -57,7 +57,7 @@ class WysiwygExtension extends AbstractWysiwygExtension
         $image = $video->getImage();
 
         if ($image && $image->getPath()) {
-            $path = $this->fileManager->getWebPath($video->getImage());
+            $path = $this->fileManager->getWebPath($image);
 
             $thumbnailUrl = [$this->urlHelper->getAbsoluteUrl($path)];
         } elseif ($video->getThumbnail()) {
