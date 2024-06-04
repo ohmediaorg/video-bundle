@@ -73,7 +73,7 @@
               </small>
               {% endif %}
             </td>
-            <td style="width:150px"><code>{{ '{{ video(' ~ video.id ~ ') }}' }}</code></td>
+            <td style="width:150px"><code>{{ '{{video(' ~ video.id ~ ')}}' }}</code></td>
             <td>{{ video.updatedAt|datetime }}</td>
             <td>
               {% if is_granted(attributes.edit, video) %}
