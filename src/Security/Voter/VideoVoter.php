@@ -50,7 +50,7 @@ class VideoVoter extends AbstractEntityVoter
 
     protected function canDelete(Video $video, User $loggedIn): bool
     {
-        $shortcode = sprintf('{{ video(%d) }}', $video->getId());
+        $shortcode = sprintf('video(%d)', $video->getId());
 
         return !$this->wysiwyg->shortcodesInUse($shortcode);
     }
