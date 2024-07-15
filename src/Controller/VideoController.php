@@ -4,7 +4,7 @@ namespace OHMedia\VideoBundle\Controller;
 
 use OHMedia\BackendBundle\Routing\Attribute\Admin;
 use OHMedia\BootstrapBundle\Service\Paginator;
-use OHMedia\SecurityBundle\Form\DeleteType;
+use OHMedia\UtilityBundle\Form\DeleteType;
 use OHMedia\VideoBundle\Entity\Video;
 use OHMedia\VideoBundle\Form\VideoType;
 use OHMedia\VideoBundle\Repository\VideoRepository;
