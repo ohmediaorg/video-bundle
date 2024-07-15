@@ -5,14 +5,14 @@ namespace OHMedia\VideoBundle\Entity;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use OHMedia\FileBundle\Entity\File;
-use OHMedia\SecurityBundle\Entity\Traits\BlameableTrait;
+use OHMedia\UtilityBundle\Entity\BlameableEntityTrait;
 use OHMedia\VideoBundle\Repository\VideoRepository;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: VideoRepository::class)]
 class Video
 {
-    use BlameableTrait;
+    use BlameableEntityTrait;
 
     public const TYPE_VIMEO = 'vimeo';
     public const TYPE_YOUTUBE = 'youtube';
