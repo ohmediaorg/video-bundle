@@ -6,6 +6,7 @@ use OHMedia\FileBundle\Form\Type\FileEntityType;
 use OHMedia\VideoBundle\Entity\Video;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -19,14 +20,18 @@ class VideoType extends AbstractType
         $builder->add('url', UrlType::class, [
             'label' => 'URL',
             'mapped' => false,
-            'help' => 'Enter a YouTube or Vimeo URL.',
+            'help' => 'Enter a YouTube or Vimeo URL, then use the button to the right to fetch the video information.',
             'data' => $video->getUrl(),
         ]);
 
         $builder->add('title');
 
-        $builder->add('type', HiddenType::class);
-        $builder->add('video_id', HiddenType::class);
+        $builder->add('type', TextType::class);
+
+        $builder->add('video_id', TextType::class, [
+            'label' => 'Video ID',
+        ]);
+
         $builder->add('thumbnail', HiddenType::class);
         $builder->add('duration', HiddenType::class);
 

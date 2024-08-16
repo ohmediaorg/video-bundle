@@ -28,10 +28,12 @@ class Video
     private ?string $title = null;
 
     #[ORM\Column(length: 20)]
+    #[Assert\NotBlank]
     #[Assert\Length(max: 20)]
     private ?string $type = null;
 
     #[ORM\Column(length: 20)]
+    #[Assert\NotBlank]
     #[Assert\Length(max: 20)]
     private ?string $video_id = null;
 
