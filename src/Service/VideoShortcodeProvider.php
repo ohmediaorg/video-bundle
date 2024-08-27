@@ -2,9 +2,9 @@
 
 namespace OHMedia\VideoBundle\Service;
 
-use OHMedia\BackendBundle\Shortcodes\AbstractShortcodeProvider;
-use OHMedia\BackendBundle\Shortcodes\Shortcode;
 use OHMedia\VideoBundle\Repository\VideoRepository;
+use OHMedia\WysiwygBundle\Shortcodes\AbstractShortcodeProvider;
+use OHMedia\WysiwygBundle\Shortcodes\Shortcode;
 
 class VideoShortcodeProvider extends AbstractShortcodeProvider
 {
