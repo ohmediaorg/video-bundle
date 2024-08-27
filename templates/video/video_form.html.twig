@@ -90,7 +90,7 @@
   }
 
   {% if video.type %}
-  setTypeDisplay({{ video.type|json_encode|raw }});
+  setTypeDisplay({{ video.type|js }});
   {% endif %}
 
   function setThumbnailDisplay(thumbnail) {
@@ -107,7 +107,7 @@
   }
 
   {% if video.thumbnail %}
-  setThumbnailDisplay({{ video.thumbnail|json_encode|raw }});
+  setThumbnailDisplay({{ video.thumbnail|js }});
   {% endif %}
 
   urlButton.addEventListener('click', async (e) => {
