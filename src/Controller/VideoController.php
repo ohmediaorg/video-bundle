@@ -9,6 +9,7 @@ use OHMedia\VideoBundle\Entity\Video;
 use OHMedia\VideoBundle\Form\VideoType;
 use OHMedia\VideoBundle\Repository\VideoRepository;
 use OHMedia\VideoBundle\Security\Voter\VideoVoter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
@@ -81,7 +82,7 @@ class VideoController extends AbstractController
     #[Route('/video/{id}/edit', name: 'video_edit', methods: ['GET', 'POST'])]
     public function edit(
         Request $request,
-        Video $video,
+        #[MapEntity(id: 'id')] Video $video,
     ): Response {
         $this->denyAccessUnlessGranted(
             VideoVoter::EDIT,
@@ -116,7 +117,7 @@ class VideoController extends AbstractController
     #[Route('/video/{id}/delete', name: 'video_delete', methods: ['GET', 'POST'])]
     public function delete(
         Request $request,
-        Video $video,
+        #[MapEntity(id: 'id')] Video $video,
     ): Response {
         $this->denyAccessUnlessGranted(
             VideoVoter::DELETE,
