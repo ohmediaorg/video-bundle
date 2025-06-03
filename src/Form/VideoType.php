@@ -39,7 +39,6 @@ class VideoType extends AbstractType
             'label' => 'Override Thumbnail',
             'required' => false,
             'image' => true,
-            'data' => $video->getImage(),
         ]);
     }
 
