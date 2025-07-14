@@ -125,6 +125,7 @@
 
     if (video) {
       titleInput.value = video.title;
+      titleInput.dispatchEvent(new Event('change'));
       typeInput.value = video.type;
       videoIdInput.value = video.id;
       thumbnailInput.value = video.thumbnail;

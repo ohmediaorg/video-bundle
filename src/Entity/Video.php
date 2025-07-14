@@ -22,23 +22,20 @@ class Video
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 100)]
     #[Assert\NotBlank]
-    #[Assert\Length(max: 255)]
+    #[Assert\Length(max: 100)]
     private ?string $title = null;
 
     #[ORM\Column(length: 20)]
     #[Assert\NotBlank]
-    #[Assert\Length(max: 20)]
     private ?string $type = null;
 
     #[ORM\Column(length: 20)]
     #[Assert\NotBlank]
-    #[Assert\Length(max: 20)]
     private ?string $video_id = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Assert\Length(max: 255)]
     private ?string $thumbnail = null;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
