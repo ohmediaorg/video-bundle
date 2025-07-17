@@ -57,7 +57,7 @@ class VideoController extends AbstractController
 
         $form = $this->createForm(VideoType::class, $video);
 
-        $form->add('submit', SubmitType::class);
+        $form->add('save', SubmitType::class);
 
         $form->handleRequest($request);
 
@@ -92,7 +92,7 @@ class VideoController extends AbstractController
 
         $form = $this->createForm(VideoType::class, $video);
 
-        $form->add('submit', SubmitType::class);
+        $form->add('save', SubmitType::class);
 
         $form->handleRequest($request);
 
