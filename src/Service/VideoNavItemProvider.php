@@ -14,7 +14,7 @@ class VideoNavItemProvider extends AbstractNavItemProvider
     {
         if ($this->isGranted(VideoVoter::INDEX, new Video())) {
             return (new NavLink('Videos', 'video_index'))
-                ->setIcon('play-btn-fill');
+                ->setIcon('camera-video');
         }
 
         return null;
