@@ -3,8 +3,8 @@
 {% set form_title = 'Delete ' ~ video %}
 
 {% block breadcrumbs %}
-{{ bootstrap_breadcrumbs(
-  bootstrap_breadcrumb(bootstrap_icon('camera-video') ~ ' Videos', 'video_index'),
-  bootstrap_breadcrumb('Delete'),
-) }}
+  {{ bootstrap_breadcrumbs(
+    bootstrap_breadcrumb(bootstrap_icon('camera-video') ~ ' Videos', 'video_index'),
+    bootstrap_breadcrumb('Delete'),
+  ) }}
 {% endblock %}
