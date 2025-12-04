@@ -14,8 +14,8 @@ use OHMedia\VideoBundle\Security\Voter\VideoVoter;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -63,11 +63,9 @@ class VideoController extends AbstractController
 
         $formBuilder->setMethod('GET');
 
-        $formBuilder->add('search', TextType::class, [
+        $formBuilder->add('search', SearchType::class, [
             'required' => false,
-            'attr' => [
-                'placeholder' => 'Video title/type/ID',
-            ],
+            'label' => 'Title, type, ID',
         ]);
 
         $form = $formBuilder->getForm();
