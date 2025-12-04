@@ -2,6 +2,7 @@
 
 namespace OHMedia\VideoBundle\Controller;
 
+use Doctrine\ORM\QueryBuilder;
 use OHMedia\BackendBundle\Form\MultiSaveType;
 use OHMedia\BackendBundle\Routing\Attribute\Admin;
 use OHMedia\BootstrapBundle\Service\Paginator;
@@ -12,7 +13,9 @@ use OHMedia\VideoBundle\Repository\VideoRepository;
 use OHMedia\VideoBundle\Security\Voter\VideoVoter;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,7 +29,7 @@ class VideoController extends AbstractController
     }
 
     #[Route('/videos', name: 'video_index', methods: ['GET'])]
-    public function index(Paginator $paginator): Response
+    public function index(Paginator $paginator, Request $request): Response
     {
         $newVideo = new Video();
 
@@ -39,11 +42,60 @@ class VideoController extends AbstractController
         $qb = $this->videoRepository->createQueryBuilder('v');
         $qb->orderBy('v.title', 'asc');
 
+        $searchForm = $this->getSearchForm($request);
+
+        $this->applySearch($searchForm, $qb);
+
         return $this->render('@OHMediaVideo/video/video_index.html.twig', [
             'pagination' => $paginator->paginate($qb, 20),
             'new_video' => $newVideo,
             'attributes' => $this->getAttributes(),
+            'search_form' => $searchForm,
         ]);
+    }
+
+    private function getSearchForm(Request $request): FormInterface
+    {
+        $formBuilder = $this->container->get('form.factory')
+            ->createNamedBuilder('', FormType::class, null, [
+                'csrf_protection' => false,
+            ]);
+
+        $formBuilder->setMethod('GET');
+
+        $formBuilder->add('search', TextType::class, [
+            'required' => false,
+            'attr' => [
+                'placeholder' => 'Video title/type/ID',
+            ],
+        ]);
+
+        $form = $formBuilder->getForm();
+
+        $form->handleRequest($request);
+
+        return $form;
+    }
+
+    private function applySearch(FormInterface $form, QueryBuilder $qb): void
+    {
+        $search = $form->get('search')->getData();
+
+        if ($search) {
+            $searchFields = [
+                'v.title',
+                'v.type',
+                'v.video_id',
+            ];
+
+            $searchLikes = [];
+            foreach ($searchFields as $searchField) {
+                $searchLikes[] = "$searchField LIKE :search";
+            }
+
+            $qb->andWhere('('.implode(' OR ', $searchLikes).')')
+                ->setParameter('search', '%'.$search.'%');
+        }
     }
 
     #[Route('/video/create', name: 'video_create', methods: ['GET', 'POST'])]
