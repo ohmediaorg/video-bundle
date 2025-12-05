@@ -136,6 +136,10 @@
         durationDisplay.value = video.duration_formatted;
 
         setThumbnailDisplay(video.thumbnail);
+
+        if (!video.title || !video.thumbnail || !video.duration) {
+          window.bootstrapToast('Some of the video data could not be pulled automatically.', 'warning');
+        }
       }
     });
   </script>
