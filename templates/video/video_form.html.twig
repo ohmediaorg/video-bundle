@@ -140,6 +140,8 @@
         if (!video.title || !video.thumbnail || !video.duration) {
           window.bootstrapToast('Some of the video data could not be pulled automatically.', 'warning');
         }
+      } else {
+        window.bootstrapToast('This URL is not supported.', 'danger');
       }
     });
   </script>
