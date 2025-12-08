@@ -63,7 +63,7 @@
 
 {% block javascripts %}
   <script type="module">
-    import parse from '/bundles/ohmediavideo/js/video.js';
+    import parse from '/bundles/ohmediavideo/js/video.js?v=1';
 
     const urlInput = document.getElementById('{{ form.url.vars.id }}');
     const urlLabel = document.querySelector('label[for=' + urlInput.id + ']');
