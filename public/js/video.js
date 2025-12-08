@@ -121,25 +121,30 @@ function parseYouTube(url) {
         document.body.appendChild(el);
       }
 
-      const player = new YT.Player('OH_MEDIA_VIDEO_YOUTUBE_HIDDEN', {
-        height: '390',
-        width: '640',
-        videoId: id,
-        playerVars: {
-          autoplay: 0,
-        },
-        events: {
-          onReady: function () {
-            video.title = player.getVideoData().title;
-            video.duration = player.getDuration();
-            video.duration_formatted = formatDuration(video.duration);
-
-            player.destroy();
-
-            resolve();
+      try {
+        const player = new YT.Player('OH_MEDIA_VIDEO_YOUTUBE_HIDDEN', {
+          height: '390',
+          width: '640',
+          videoId: id,
+          playerVars: {
+            autoplay: 0,
           },
-        },
-      });
+          events: {
+            onReady: function () {
+              video.title = player.getVideoData().title;
+              video.duration = player.getDuration();
+              video.duration_formatted = formatDuration(video.duration);
+
+              player.destroy();
+
+              resolve();
+            },
+          },
+        });
+      } catch (e) {
+        document.getElementById('OH_MEDIA_VIDEO_YOUTUBE_HIDDEN').remove();
+        resolve();
+      }
     });
   }
 
