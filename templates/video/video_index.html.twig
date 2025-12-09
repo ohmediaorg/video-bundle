@@ -49,11 +49,11 @@
         <table class="table table-striped">
           <thead>
             <tr>
-              <th>&nbsp;</th>
+              <th aria-label="Thumbnail"></th>
               <th>Video</th>
               <th>Shortcode</th>
               <th>Last Updated</th>
-              <th></th>
+              <th aria-label="Row Actions"></th>
             </tr>
           </thead>
           <tbody>
@@ -110,7 +110,7 @@
           height: 100,
         }) }}
       {% elseif video.thumbnail %}
-        <img src="{{ video.thumbnail }}" />
+        <img src="{{ video.thumbnail }}" alt="" />
       {% endif %}
     </td>
     <td>
