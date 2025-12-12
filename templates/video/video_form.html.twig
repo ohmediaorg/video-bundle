@@ -18,9 +18,8 @@
                     'aria-describedby': form.url.vars.id ~ '_help',
                   },
                 }) }}
-                <button id="{{ form.url.vars.id }}_button" class="btn btn-dark" type="button" title="Get Video Data">
+                <button id="{{ form.url.vars.id }}_button" class="btn btn-dark" type="button" title="Get Video Data" aria-label="Get Video Data">
                   {{ bootstrap_icon('cloud-arrow-down') }}
-                  <span class="visually-hidden">Get Video Data</span>
                 </button>
               </div>
               {{ form_help(form.url) }}
