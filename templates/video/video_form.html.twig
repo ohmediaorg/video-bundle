@@ -13,10 +13,13 @@
             <div class="mb-3">
               {{ form_label(form.url) }}
               <div class="input-group">
-                {{ form_widget(form.url) }}
-                <button id="{{ form.url.vars.id }}_button" class="btn btn-dark" type="button" title="Get Video Data">
+                {{ form_widget(form.url, {
+                  attr: {
+                    'aria-describedby': form.url.vars.id ~ '_help',
+                  },
+                }) }}
+                <button id="{{ form.url.vars.id }}_button" class="btn btn-dark" type="button" title="Get Video Data" aria-label="Get Video Data">
                   {{ bootstrap_icon('cloud-arrow-down') }}
-                  <span class="visually-hidden">Get Video Data</span>
                 </button>
               </div>
               {{ form_help(form.url) }}
@@ -43,13 +46,13 @@
             }) }}
 
             <div class="mb-3">
-              <label class="form-label required">Duration</label>
+              <label class="form-label required" for="video_duration_display">Duration</label>
               <input id="video_duration_display" class="form-control" value="{{ video.durationReadable }}" disabled />
             </div>
           </div>
           <div class="col-lg-6">
             <div class="mb-3">
-              <label class="form-label">Thumbnail</label>
+              <div class="form-label">Thumbnail</div>
               <div id="video_thumbnail_display">&nbsp;</div>
             </div>
 
@@ -99,6 +102,7 @@
       if (thumbnail) {
         const img = document.createElement('img');
         img.src = thumbnail;
+        img.alt = '';
 
         thumbnailDisplay.appendChild(img);
       } else {
