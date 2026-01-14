@@ -3,9 +3,9 @@
 {% block meta_title %}Videos{% endblock %}
 
 {% block breadcrumbs %}
-{{ bootstrap_breadcrumbs(
-  bootstrap_breadcrumb(bootstrap_icon('play-btn-fill') ~ ' Videos', 'video_index'),
-) }}
+  {{ bootstrap_breadcrumbs(
+    bootstrap_breadcrumb(bootstrap_icon('camera-video') ~ ' Videos', 'video_index'),
+  ) }}
 {% endblock %}
 
 {% set can_create_video = is_granted(attributes.create, new_video) %}
@@ -13,98 +13,130 @@
 {% set create_video_href = path('video_create') %}
 
 {% block actions %}
-{% if can_create_video %}
-<a href="{{ create_video_href }}" class="btn btn-sm btn-primary">
-  {{ bootstrap_icon('plus') }} Add Video</a>
-{% endif %}
+  {% if can_create_video %}
+    <a href="{{ create_video_href }}" class="btn btn-primary">
+      {{ bootstrap_icon('plus-lg') }}
+      Add Video
+    </a>
+  {% endif %}
 {% endblock %}
 
 {% block main %}
-{% set video_count = pagination.count %}
+  {% set video_count = pagination.count %}
 
-<div class="card">
-  <div class="card-body">
-    <div class="card-title card-title-with-count">
-      <h1 class="card-title-heading">Videos</h1>
-      <div class="card-title-count">
-        {{ bootstrap_badge_primary(video_count) }}
+  <div class="card">
+    <div class="card-body">
+      <div class="card-title card-title-with-count">
+        <h1 class="card-title-heading">Videos</h1>
+        <div class="card-title-count">
+          {{ bootstrap_badge_primary(video_count) }}
+        </div>
       </div>
+
+      {{ form_start(search_form) }}
+        <div class="row align-items-end">
+          <div class="col-lg-6 col-sm-6">
+            {{ form_row(search_form.search) }}
+          </div>
+          <div class="col-lg-12 col-sm-6">
+            <button class="btn btn-outline-dark mb-3" type="submit">Search</button>
+            <a class="btn btn-secondary mb-3" href="{{ path('video_index') }}">Reset</a>
+          </div>
+        </div>
+      {{ form_end(search_form) }}
+
+      {% if video_count %}
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>&nbsp;</th>
+              <th>Video</th>
+              <th>Shortcode</th>
+              <th>Last Updated</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for video in pagination.results %}
+              {{ _self.table_row(video, attributes) }}
+            {% endfor %}
+          </tbody>
+        </table>
+
+        {{ bootstrap_pagination(pagination) }}
+
+        <small>{{ bootstrap_pagination_info(pagination) }}</small>
+      {% else %}
+        <p>
+          No videos found.
+          {% if can_create_video %}
+            <a href="{{ create_video_href }}">Click here to add a video.</a>
+          {% endif %}
+        </p>
+      {% endif %}
     </div>
-
-    {% if video_count %}
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th>&nbsp;</th>
-            <th>Video</th>
-            <th>Shortcode</th>
-            <th>Last Updated</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for video in pagination.results %}
-          <tr>
-            <td style="width:150px;">
-              {% if video.image and video.image.path %}
-                {{ image_tag(video.image, {
-                  width: 150,
-                  height: 100,
-                }) }}
-              {% elseif video.thumbnail %}
-                <img src="{{ video.thumbnail }}" />
-              {% endif %}
-            </td>
-            <td>
-              <small class="d-block">{{ video.title }}</small>
-              {% if video.url %}
-              <small class="d-block">
-                {% if video.typeVimeo %}
-                <i class="bi bi-vimeo" style="color:#00adef"></i>
-                {% elseif video.typeYouTube %}
-                <i class="bi bi-youtube" style="color:red"></i>
-                {% endif %}
-                <a href="{{ video.url }}" target="_blank" rel="noopener">{{ video.url }}</a>
-              </small>
-              {% endif %}
-              {% if video.duration %}
-              <small class="d-block">
-                <b>Duration:</b> {{ video.durationReadable }}
-              </small>
-              {% endif %}
-            </td>
-            <td style="width:150px">{{ shortcode('video(' ~ video.id ~ ')') }}</td>
-            <td>{{ video.updatedAt|datetime }}</td>
-            <td>
-              {% if is_granted(attributes.edit, video) %}
-              <a class="btn btn-sm btn-primary btn-action" href="{{ path('video_edit', {id: video.id}) }}" title="Edit">
-                {{ bootstrap_icon('pen-fill') }}
-                <span class="visually-hidden">Edit</span>
-              </a>
-              {% endif %}
-              {% if is_granted(attributes.delete, video) %}
-              <a class="btn btn-sm btn-danger btn-action" href="{{ path('video_delete', {id: video.id}) }}" title="Delete" data-confirm="Are you sure you want to delete this video? Clicking OK will take you to a verification step to delete this entry.">
-                {{ bootstrap_icon('trash-fill') }}
-                <span class="visually-hidden">Delete</span>
-              </a>
-              {% endif %}
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-
-      {{ bootstrap_pagination(pagination) }}
-
-      <small>{{ bootstrap_pagination_info(pagination) }}</small>
-    {% else %}
-      <p>
-        No videos found.
-        {% if can_create_video %}
-        <a href="{{ create_video_href }}">Click here to add a video.</a>
-        {% endif %}
-      </p>
-    {% endif %}
   </div>
-</div>
 {% endblock %}
+
+{% macro table_row(video, attributes, active_video) %}
+  {% set row_actions = [] %}
+
+  {% if is_granted(attributes.edit, video) %}
+    {% set row_actions = row_actions|merge([{
+      route: 'video_edit',
+      route_params: {id: video.id},
+      color: 'secondary',
+      icon: 'pencil',
+      text: 'Edit Video',
+    }]) %}
+  {% endif %}
+
+  {% if is_granted(attributes.delete, video) %}
+    {% set row_actions = row_actions|merge([{
+      route: 'video_delete',
+      route_params: {id: video.id},
+      color: 'danger',
+      icon: 'trash',
+      text: 'Delete Video',
+      confirm: 'Are you sure you want to delete this video? Clicking OK will take you to a verification step to delete this entry.',
+    }]) %}
+  {% endif %}
+
+  <tr>
+    <td style="width:150px;">
+      {% if video.image and video.image.path %}
+        {{ image_tag(video.image, {
+          width: 150,
+          height: 100,
+        }) }}
+      {% elseif video.thumbnail %}
+        <img src="{{ video.thumbnail }}" />
+      {% endif %}
+    </td>
+    <td>
+      <small class="d-block">{{ video.title }}</small>
+      {% if video.url %}
+      <small class="d-block">
+        {% if video.typeVimeo %}
+        <i class="bi bi-vimeo" style="color:#00adef"></i>
+        {% elseif video.typeYouTube %}
+        <i class="bi bi-youtube" style="color:red"></i>
+        {% endif %}
+        <a href="{{ video.url }}" target="_blank" rel="noopener">{{ video.url }}</a>
+      </small>
+      {% endif %}
+      {% if video.duration %}
+      <small class="d-block">
+        <b>Duration:</b> {{ video.durationReadable }}
+      </small>
+      {% endif %}
+    </td>
+    <td style="width:150px">{{ shortcode('video(' ~ video.id ~ ')') }}</td>
+    <td>{{ video.updatedAt|datetime }}</td>
+    <td>
+      {% include '@OHMediaBackend/widget/row_actions.html.twig' with {
+        row_actions: row_actions,
+      } only %}
+    </td>
+  </tr>
+{% endmacro %}

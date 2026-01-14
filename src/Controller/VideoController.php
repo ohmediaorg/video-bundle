@@ -2,6 +2,8 @@
 
 namespace OHMedia\VideoBundle\Controller;
 
+use Doctrine\ORM\QueryBuilder;
+use OHMedia\BackendBundle\Form\MultiSaveType;
 use OHMedia\BackendBundle\Routing\Attribute\Admin;
 use OHMedia\BootstrapBundle\Service\Paginator;
 use OHMedia\UtilityBundle\Form\DeleteType;
@@ -11,7 +13,10 @@ use OHMedia\VideoBundle\Repository\VideoRepository;
 use OHMedia\VideoBundle\Security\Voter\VideoVoter;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -24,7 +29,7 @@ class VideoController extends AbstractController
     }
 
     #[Route('/videos', name: 'video_index', methods: ['GET'])]
-    public function index(Paginator $paginator): Response
+    public function index(Paginator $paginator, Request $request): Response
     {
         $newVideo = new Video();
 
@@ -37,11 +42,58 @@ class VideoController extends AbstractController
         $qb = $this->videoRepository->createQueryBuilder('v');
         $qb->orderBy('v.title', 'asc');
 
+        $searchForm = $this->getSearchForm($request);
+
+        $this->applySearch($searchForm, $qb);
+
         return $this->render('@OHMediaVideo/video/video_index.html.twig', [
             'pagination' => $paginator->paginate($qb, 20),
             'new_video' => $newVideo,
             'attributes' => $this->getAttributes(),
+            'search_form' => $searchForm,
         ]);
+    }
+
+    private function getSearchForm(Request $request): FormInterface
+    {
+        $formBuilder = $this->container->get('form.factory')
+            ->createNamedBuilder('', FormType::class, null, [
+                'csrf_protection' => false,
+            ]);
+
+        $formBuilder->setMethod('GET');
+
+        $formBuilder->add('search', SearchType::class, [
+            'required' => false,
+            'label' => 'Title, type, ID',
+        ]);
+
+        $form = $formBuilder->getForm();
+
+        $form->handleRequest($request);
+
+        return $form;
+    }
+
+    private function applySearch(FormInterface $form, QueryBuilder $qb): void
+    {
+        $search = $form->get('search')->getData();
+
+        if ($search) {
+            $searchFields = [
+                'v.title',
+                'v.type',
+                'v.video_id',
+            ];
+
+            $searchLikes = [];
+            foreach ($searchFields as $searchField) {
+                $searchLikes[] = "$searchField LIKE :search";
+            }
+
+            $qb->andWhere('('.implode(' OR ', $searchLikes).')')
+                ->setParameter('search', '%'.$search.'%');
+        }
     }
 
     #[Route('/video/create', name: 'video_create', methods: ['GET', 'POST'])]
@@ -57,7 +109,7 @@ class VideoController extends AbstractController
 
         $form = $this->createForm(VideoType::class, $video);
 
-        $form->add('save', SubmitType::class);
+        $form->add('save', MultiSaveType::class);
 
         $form->handleRequest($request);
 
@@ -67,7 +119,7 @@ class VideoController extends AbstractController
 
                 $this->addFlash('notice', 'The video was created successfully.');
 
-                return $this->redirectToRoute('video_index');
+                return $this->redirectForm($video, $form);
             }
 
             $this->addFlash('error', 'There are some errors in the form below.');
@@ -92,7 +144,7 @@ class VideoController extends AbstractController
 
         $form = $this->createForm(VideoType::class, $video);
 
-        $form->add('save', SubmitType::class);
+        $form->add('save', MultiSaveType::class);
 
         $form->handleRequest($request);
 
@@ -102,7 +154,7 @@ class VideoController extends AbstractController
 
                 $this->addFlash('notice', 'The video was updated successfully.');
 
-                return $this->redirectToRoute('video_index');
+                return $this->redirectForm($video, $form);
             }
 
             $this->addFlash('error', 'There are some errors in the form below.');
@@ -112,6 +164,21 @@ class VideoController extends AbstractController
             'form' => $form->createView(),
             'video' => $video,
         ]);
+    }
+
+    private function redirectForm(Video $video, FormInterface $form): Response
+    {
+        $clickedButtonName = $form->getClickedButton()->getName() ?? null;
+
+        if ('keep_editing' === $clickedButtonName) {
+            return $this->redirectToRoute('video_edit', [
+                'id' => $video->getId(),
+            ]);
+        } elseif ('add_another' === $clickedButtonName) {
+            return $this->redirectToRoute('video_create');
+        } else {
+            return $this->redirectToRoute('video_index');
+        }
     }
 
     #[Route('/video/{id}/delete', name: 'video_delete', methods: ['GET', 'POST'])]
