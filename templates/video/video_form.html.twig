@@ -10,7 +10,7 @@
       {{ form_start(form) }}
         <div class="row">
           <div class="col-lg-6">
-            <div class="mb-3">
+            <div class="form-group">
               {{ form_label(form.url) }}
               <div class="input-group">
                 {{ form_widget(form.url, {
@@ -27,7 +27,7 @@
             </div>
             {{ form_row(form.title) }}
 
-            <div class="mb-3">
+            <div class="form-group">
               {{ form_label(form.type) }}
               <div id="video_type_display" class="form-control {% if not form.type.vars.valid %}is-invalid{% endif %}" style="background-color:var(--bs-secondary-bg)">&nbsp;</div>
               {{ form_widget(form.type, {
@@ -45,13 +45,13 @@
               }
             }) }}
 
-            <div class="mb-3">
+            <div class="form-group">
               <label class="form-label required" for="video_duration_display">Duration</label>
               <input id="video_duration_display" class="form-control" value="{{ video.durationReadable }}" disabled />
             </div>
           </div>
           <div class="col-lg-6">
-            <div class="mb-3">
+            <div class="form-group">
               <div class="form-label">Thumbnail</div>
               <div id="video_thumbnail_display">&nbsp;</div>
             </div>
