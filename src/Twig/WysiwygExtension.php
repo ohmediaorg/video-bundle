@@ -31,7 +31,7 @@ class WysiwygExtension extends AbstractWysiwygExtension
         ];
     }
 
-    public function video(Environment $twig, int $id = null)
+    public function video(Environment $twig, ?int $id = null)
     {
         $video = $id ? $this->videoRepository->find($id) : null;
 
