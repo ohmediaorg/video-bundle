@@ -40,7 +40,7 @@ class VideoController extends AbstractController
         );
 
         $qb = $this->videoRepository->createQueryBuilder('v');
-        $qb->orderBy('v.title', 'asc');
+        $qb->orderBy('v.title', \SortDirection::Ascending);
 
         $searchForm = $this->getSearchForm($request);
 

@@ -20,7 +20,7 @@ class VideoShortcodeProvider extends AbstractShortcodeProvider
     public function buildShortcodes(): void
     {
         $videos = $this->videoRepository->createQueryBuilder('v')
-            ->orderBy('v.title', 'asc')
+            ->orderBy('v.title', \SortDirection::Ascending)
             ->getQuery()
             ->getResult();
 
